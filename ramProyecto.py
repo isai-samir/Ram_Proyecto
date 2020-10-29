@@ -318,97 +318,103 @@ if __name__ == "__main__":
         print("7.- Cambiar estados")
         print("8.- Mostrar Procesos")
         print("9.- Salir ",end="")
-        menu = int(input())
-        #Crear proceso
-        if menu == 1:
-            bandera = True
-            print("Ingresa identificador del proceso: ", end="")
-            id2 = input()
-            for i in procesos:
-                if i.id == id2:
-                    print("Ya hay un porceso con el mismo id")
-                    bandera = False
-                    break
-            for i in hdd:
-                if i.id == id2:
-                    print("Ya hay un porceso con el mismo id")
-                    bandera = False
-                    break
-            if bandera:
-                estadoProceso = choice(["Listo","Ejecucion","Espera"])
-                print("Estado ",estadoProceso)
-                print("Ingresa el tamaño del proceso: ", end="")
-                tamProceso = int(input())
-                if tamProceso <= 1 or tamProceso >= MAX_SIZE: print("\tTamaño invalido")
-                else:
-                    actualSize = agregarElemntos(procesos,actualSize,hdd,id2,tamProceso,estadoProceso)
-        #Ver RAM
-        elif menu == 2: mostrar(procesos)
-        #Ver Paginacion
-        elif menu == 3:
-            paginacion(procesos)
-        #Ver Hdd
-        elif menu == 4: mostrar(hdd)
-        #Representacion de RAM
-        elif menu == 5: 
-            print("\t1.-Mapa de bits")
-            print("\t2.-Listas Libres",end=" ")
-            opcion = int(input())
-            if opcion == 1: mapaBits(procesos)
-            elif opcion == 2:
-                lista.generarLista(procesos)
-                lista.mostrar()
-        #Intercambio de procesos
-        elif menu == 6: 
-            print("\t1.-Pasar proceso de RAM a HDD")
-            print("\t2.-Pasar proceso de HDD a RAM")
-            opc =  int(input('Opcion deseada: '))
-            if opc == 1:
-                if len(procesos) == 0 :
-                    print("Memoria RAM sin procesos")
-                else:
-                    mostrar(procesos)
-                    id_to_move = input('Ingresa el ID del proceso a mover a HDD: ')
-                    t = fromRAMtoHDD(id_to_move,hdd,procesos)
-                    if t > 0:
-                        print("Proceso movido")
-                        actualSize -= t
-                    else: 
-                        print("No se pudo mover el proceso")
-            elif opc ==2:
-                if len(hdd) == 0:
-                    print("El Disco esta vacio. Intente agregar un proceso desde RAM")
-                else:
-                    mostrar(hdd)
-                    id_to_move = input('Ingresa el ID del proceso a mover a RAM: ')
-                    t = fromHDDtoRAM(id_to_move,hdd,procesos,actualSize)
-                    if t > 0:
-                        actualSize += t
-                        print("Proceso movido")
+        try: menu = int(input())
+        except ValueError as e: print("Caracter no válido")
+        else:
+            #Crear proceso
+            if menu == 1:
+                bandera = True
+                print("Ingresa identificador del proceso: ", end="")
+                id2 = input()
+                for i in procesos:
+                    if i.id == id2:
+                        print("Ya hay un porceso con el mismo id")
+                        bandera = False
+                        break
+                for i in hdd:
+                    if i.id == id2:
+                        print("Ya hay un porceso con el mismo id")
+                        bandera = False
+                        break
+                if bandera:
+                    estadoProceso = choice(["Listo","Ejecucion","Espera"])
+                    print("Estado ",estadoProceso)
+                    print("Ingresa el tamaño del proceso: ", end="")
+                    try:tamProceso = int(input())
+                    except ValueError as e: print("Cáracter no válido")
                     else:
-                        print("No se pudo mover el proceso")
-            else:
-                print("Opcion invalida")
-        #Cambiar Estados
-        elif menu == 7:
-            print("1.- Cambiar un Proceso")
-            print("2.- Cambiar todos los procesos ",end=" ")
-            opc = int(input())
-            if opc == 1: #Cambiar un proceso
-                print("Da el PID del proceso ",end="")
-                pid = input()
-                actualSize = cambiarEstadoUno(procesos,hdd,pid,actualSize)
-            #Cambiar todos los procesos
-            elif opc == 2: actualSize = cambiarEstadoTodos(procesos,hdd,actualSize)
-            else: print("\tOpcion incorrecta")
-        #Mostrar Procesos
-        elif menu == 8:
-            print("Memoria RAM")
-            mostrar(procesos)
-            print("Almacenamiento HDD")
-            mostrar(hdd)
-        #Salir
-        elif menu == 9:
-            print("\t\tGracias por usar este programa")
-            break
-        else: print("\tOpcion incorrecta, de otra")
+                        if tamProceso <= 1 or tamProceso >= MAX_SIZE: print("\tTamaño invalido")
+                        else:
+                            actualSize = agregarElemntos(procesos,actualSize,hdd,id2,tamProceso,estadoProceso)
+            #Ver RAM
+            elif menu == 2: mostrar(procesos)
+            #Ver Paginacion
+            elif menu == 3:
+                paginacion(procesos)
+            #Ver Hdd
+            elif menu == 4: mostrar(hdd)
+            #Representacion de RAM
+            elif menu == 5: 
+                print("\t1.-Mapa de bits")
+                print("\t2.-Listas Libres",end=" ")
+                opcion = int(input())
+                if opcion == 1: mapaBits(procesos)
+                elif opcion == 2:
+                    lista.generarLista(procesos)
+                    lista.mostrar()
+            #Intercambio de procesos
+            elif menu == 6: 
+                print("\t1.-Pasar proceso de RAM a HDD")
+                print("\t2.-Pasar proceso de HDD a RAM")
+                opc =  int(input('Opcion deseada: '))
+                if opc == 1:
+                    if len(procesos) == 0 :
+                        print("Memoria RAM sin procesos")
+                    else:
+                        mostrar(procesos)
+                        id_to_move = input('Ingresa el ID del proceso a mover a HDD: ')
+                        t = fromRAMtoHDD(id_to_move,hdd,procesos)
+                        if t > 0:
+                            print("Proceso movido")
+                            actualSize -= t
+                        else: 
+                            print("No se pudo mover el proceso")
+                elif opc ==2:
+                    if len(hdd) == 0:
+                        print("El Disco esta vacio. Intente agregar un proceso desde RAM")
+                    else:
+                        mostrar(hdd)
+                        id_to_move = input('Ingresa el ID del proceso a mover a RAM: ')
+                        t = fromHDDtoRAM(id_to_move,hdd,procesos,actualSize)
+                        if t > 0:
+                            actualSize += t
+                            print("Proceso movido")
+                        else:
+                            print("No se pudo mover el proceso")
+                else:
+                    print("Opcion invalida")
+            #Cambiar Estados
+            elif menu == 7:
+                print("1.- Cambiar un Proceso")
+                print("2.- Cambiar todos los procesos ",end=" ")
+                try:opc = int(input())
+                except: print("caracter no válido")
+                else:
+                    if opc == 1: #Cambiar un proceso
+                        print("Da el PID del proceso ",end="")
+                        pid = input()
+                        actualSize = cambiarEstadoUno(procesos,hdd,pid,actualSize)
+                    #Cambiar todos los procesos
+                    elif opc == 2: actualSize = cambiarEstadoTodos(procesos,hdd,actualSize)
+                    else: print("\tOpcion incorrecta")
+            #Mostrar Procesos
+            elif menu == 8:
+                print("Memoria RAM")
+                mostrar(procesos)
+                print("Almacenamiento HDD")
+                mostrar(hdd)
+            #Salir
+            elif menu == 9:
+                print("\t\tGracias por usar este programa")
+                break
+            else: print("\tOpcion incorrecta, de otra")
